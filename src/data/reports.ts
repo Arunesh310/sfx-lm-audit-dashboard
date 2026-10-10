@@ -337,7 +337,7 @@ export const REPORTS: ReportDefinition[] = [
 ]
 
 export const PROGRAM_SUMMARY = {
-  title: 'Pendency report coverage',
+  title: "LM Audit Team's Reports Summary",
   subtitle:
     'Nine reports track pendency and scan adherence across the network; this page shows what each one covers.',
   publishBy:
