@@ -123,7 +123,9 @@ function ReportDetail({
       '',
       `Source: ${report.dataSource}`,
       report.ageing ? `Ageing: ${report.ageing}` : '',
-      report.dashboard ? `Dashboard: ${report.dashboard.label} (${report.dashboard.url})` : '',
+      report.dashboard
+        ? `Dashboard: ${report.dashboard.label}${report.dashboard.url ? ` (${report.dashboard.url})` : ''}`
+        : '',
       '',
       'Logic:',
       ...report.logic.map((l) => `• ${l}`),
@@ -184,6 +186,7 @@ function ReportDetail({
         )}
       </header>
 
+      <div className="detail-panels">
       <motion.section
         className="panel ios-glass"
         custom={0}
@@ -235,7 +238,7 @@ function ReportDetail({
       )}
 
       <motion.section
-        className="panel ios-glass"
+        className="panel ios-glass panel-span-full"
         custom={3}
         variants={panelVariants}
         initial="hidden"
@@ -254,7 +257,7 @@ function ReportDetail({
 
       {report.views && report.views.length > 0 && (
         <motion.section
-          className="panel ios-glass"
+          className="panel ios-glass panel-span-full"
           custom={4}
           variants={panelVariants}
           initial="hidden"
@@ -288,7 +291,7 @@ function ReportDetail({
 
       {report.notes && (
         <motion.section
-          className="panel note ios-glass"
+          className="panel note ios-glass panel-span-full"
           custom={6}
           variants={panelVariants}
           initial="hidden"
@@ -297,6 +300,7 @@ function ReportDetail({
           <p>{report.notes}</p>
         </motion.section>
       )}
+      </div>
     </motion.div>
   )
 }
@@ -482,22 +486,24 @@ export default function App() {
             <strong>
               <AnimatedNumber value={stats.sentSoFar} />
             </strong>{' '}
-            / {stats.expectedToday} reports · 9:30 AM IST
+            / {stats.expectedToday} scheduled sends · IST
           </span>
         </motion.div>
       </motion.header>
 
       <LayoutGroup>
-        <nav className="tabs ios-glass" aria-label="Reports">
-          <TabButton active={tab === 'overview'} onClick={() => goTab('overview')}>
-            Overview
-          </TabButton>
-          {REPORTS.map((r) => (
-            <TabButton key={r.id} active={tab === r.id} onClick={() => goTab(r.id)}>
-              {r.number} {r.title.length > 18 ? r.title.split(' ')[0] : r.title}
+        <div className="tabs-scroll">
+          <nav className="tabs ios-glass" aria-label="Reports">
+            <TabButton active={tab === 'overview'} onClick={() => goTab('overview')}>
+              Overview
             </TabButton>
-          ))}
-        </nav>
+            {REPORTS.map((r) => (
+              <TabButton key={r.id} active={tab === r.id} onClick={() => goTab(r.id)}>
+                {r.number} {r.title.length > 18 ? r.title.split(' ')[0] : r.title}
+              </TabButton>
+            ))}
+          </nav>
+        </div>
       </LayoutGroup>
 
       <main id="main-content" className="main-stage">
@@ -505,6 +511,7 @@ export default function App() {
           {tab === 'overview' && (
             <motion.div
               key="overview"
+              className="overview-page"
               initial="initial"
               animate="animate"
               exit="exit"
@@ -512,6 +519,16 @@ export default function App() {
               transition={spring}
             >
               <OverviewStats stats={stats} reportCount={REPORTS.length} next={next} />
+
+              <motion.p
+                className="lede"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                {PROGRAM_SUMMARY.subtitle} {PROGRAM_SUMMARY.publishBy} Press <kbd>1</kbd>–
+                <kbd>{REPORTS.length}</kbd> for a report, <kbd>0</kbd> overview.
+              </motion.p>
 
               <div className="toolbar">
                 <label className="search-wrap">
@@ -546,16 +563,6 @@ export default function App() {
                 </div>
               </div>
 
-              <motion.p
-                className="lede"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                {PROGRAM_SUMMARY.subtitle} {PROGRAM_SUMMARY.publishBy} Press <kbd>1</kbd>–
-                <kbd>{REPORTS.length}</kbd> for a report, <kbd>0</kbd> overview.
-              </motion.p>
-
               <motion.div
                 className="grid"
                 variants={staggerContainer}
@@ -577,7 +584,7 @@ export default function App() {
               </motion.div>
 
               {filteredReports.length === 0 && (
-                <p className="empty-search">No reports match “{query}”.</p>
+                <p className="empty-search ios-glass">No reports match “{query}”.</p>
               )}
             </motion.div>
           )}

@@ -8,6 +8,14 @@ type Props = {
 }
 
 export function DashboardLink({ dashboard, className = 'dashboard-ref', onClick }: Props) {
+  if (!dashboard.url) {
+    return (
+      <p className={`${className} muted-dash`}>
+        Dashboard · <span className="dashboard-label">{dashboard.label}</span>
+      </p>
+    )
+  }
+
   return (
     <p className={className}>
       Dashboard ·{' '}
