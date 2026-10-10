@@ -60,21 +60,6 @@ const OverviewCard = memo(function OverviewCard({
       <div className="progress-track" aria-hidden>
         <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
-      <dl className="meta">
-        <div>
-          <dt>Expected / day</dt>
-          <dd>
-            <AnimatedNumber value={perDay} />
-          </dd>
-        </div>
-        <div>
-          <dt>Sent today</dt>
-          <dd>
-            <AnimatedNumber value={soFar} />
-            <span className="pct">{Math.round(progress)}%</span>
-          </dd>
-        </div>
-      </dl>
       <span className="linkish">View logic →</span>
     </article>
   )

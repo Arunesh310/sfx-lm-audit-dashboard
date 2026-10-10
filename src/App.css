@@ -367,31 +367,6 @@
   color: var(--sfx-ink);
 }
 
-.meta {
-  display: flex;
-  gap: 1.25rem;
-  margin: 0.75rem 0 0;
-  padding: 0;
-}
-
-.meta div {
-  margin: 0;
-}
-
-.meta dt {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--sfx-muted);
-}
-
-.meta dd {
-  margin: 0.15rem 0 0;
-  font-size: 1.1rem;
-  font-weight: 650;
-  color: var(--sfx-green-dark);
-}
-
 .linkish {
   margin-top: auto;
   padding: 0.85rem 0 0;
@@ -640,18 +615,6 @@
 .scroll-top:focus-visible {
   outline: 2px solid var(--sfx-green);
   outline-offset: 2px;
-}
-
-.meta dd {
-  display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
-}
-
-.pct {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--sfx-muted);
 }
 
 .day-rail {
