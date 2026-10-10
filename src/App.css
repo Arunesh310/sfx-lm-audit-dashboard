@@ -160,6 +160,14 @@
   border-radius: 999px;
 }
 
+/* Tab bar: outer box-shadow draws a square box in many browsers — inset only */
+.tabs.ios-glass {
+  contain: none;
+  overflow: hidden;
+  clip-path: inset(0 round 999px);
+  box-shadow: var(--glass-inset);
+}
+
 .tabs .tab-btn {
   z-index: 1;
 }
@@ -197,17 +205,10 @@
 
 .tab-btn.active {
   color: #fff;
-  background: transparent;
-  filter: drop-shadow(0 3px 10px rgba(0, 140, 68, 0.28));
-}
-
-.tab-btn.active::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
   background: linear-gradient(135deg, var(--sfx-green), var(--sfx-green-dark));
-  z-index: 0;
+  background-clip: padding-box;
+  box-shadow: none;
+  filter: none;
 }
 
 .grid {
