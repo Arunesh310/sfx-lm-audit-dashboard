@@ -342,5 +342,5 @@ export const PROGRAM_SUMMARY = {
     'Nine reports track pendency and scan adherence across the network; this page shows what each one covers.',
   publishBy:
     'Most reports publish by 9:30 AM IST daily; CB, Intransit and DCH also have evening closure (DCH from ~7 AM with 15-minute live updates).',
-  documentDate: 'Oct 10, 2026 · logic doc (5)',
+  documentDate: 'Oct 10, 2026',
 }

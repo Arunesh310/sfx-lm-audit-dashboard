@@ -362,7 +362,7 @@ export default function App() {
         <div className="brand">
           <img className="logo" src="/logo.webp" alt="Shadowfax" width={40} height={40} />
           <div>
-            <p className="eyebrow">Shadowfax · {PROGRAM_SUMMARY.documentDate}</p>
+            <p className="eyebrow">SHADOWFAX · {PROGRAM_SUMMARY.documentDate}</p>
             <h1 className="title">{PROGRAM_SUMMARY.title}</h1>
             <p className="subtitle">
               {dayLabel} · <LiveIstClock />

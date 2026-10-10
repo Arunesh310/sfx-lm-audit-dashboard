@@ -164,9 +164,13 @@
   z-index: 1;
 }
 
+.tabs.ios-glass::before {
+  border-radius: inherit;
+}
+
 .tab-btn {
   position: relative;
-  border: 1px solid transparent;
+  border: none;
   background: transparent;
   color: var(--sfx-ink);
   border-radius: 999px;
@@ -174,13 +178,16 @@
   font-size: 0.78rem;
   cursor: pointer;
   overflow: hidden;
-  transition: background 0.25s ease;
+  isolation: isolate;
+  transition: color 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tab-btn:not(.active):hover {
   background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
 }
 
 .tab-label {
@@ -189,14 +196,18 @@
 }
 
 .tab-btn.active {
-  border-color: transparent;
   color: #fff;
+  background: transparent;
+  filter: drop-shadow(0 3px 10px rgba(0, 140, 68, 0.28));
+}
+
+.tab-btn.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
   background: linear-gradient(135deg, var(--sfx-green), var(--sfx-green-dark));
-  box-shadow: 0 4px 14px rgba(0, 140, 68, 0.35);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+  z-index: 0;
 }
 
 .grid {
