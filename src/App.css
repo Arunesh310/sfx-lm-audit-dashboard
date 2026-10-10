@@ -41,10 +41,6 @@
   padding-bottom: clamp(0.5rem, 2vw, 1rem);
 }
 
-.overview-page .lede {
-  margin: 0;
-}
-
 .overview-page .toolbar {
   margin-bottom: 0;
 }
@@ -201,14 +197,6 @@
     background 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
-}
-
-.lede {
-  margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: var(--sfx-muted);
-  line-height: 1.6;
-  max-width: 68ch;
 }
 
 .grid {

@@ -412,11 +412,6 @@ export default function App() {
             >
               <OverviewStats stats={stats} reportCount={REPORTS.length} next={next} />
 
-              <p className="lede">
-                {PROGRAM_SUMMARY.subtitle} {PROGRAM_SUMMARY.publishBy} Press <kbd>1</kbd>–
-                <kbd>{REPORTS.length}</kbd> for a report, <kbd>0</kbd> overview.
-              </p>
-
               <div className="toolbar">
                 <label className="search-wrap">
                   <span className="sr-only">Search reports</span>
