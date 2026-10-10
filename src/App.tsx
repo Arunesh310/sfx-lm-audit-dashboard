@@ -1,6 +1,7 @@
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { AnimatedNumber } from './components/AnimatedNumber'
+import { DashboardLink } from './components/DashboardLink'
 import { LiveIstClock } from './components/LiveIstClock'
 import { ScheduleDayRail } from './components/ScheduleDayRail'
 import { ScrollToTop } from './components/ScrollToTop'
@@ -61,7 +62,7 @@ function OverviewCard({
         </motion.span>
       </div>
       <h2>{report.title}</h2>
-      {report.dashboard && <p className="dashboard-ref">Dashboard · {report.dashboard}</p>}
+      {report.dashboard && <DashboardLink dashboard={report.dashboard} />}
       <p className="regarding">{report.regarding}</p>
       <ScheduleDayRail frequency={report.frequency} compact now={now} />
       <p className="schedule">{scheduleSummary(report.frequency)}</p>
@@ -122,7 +123,7 @@ function ReportDetail({
       '',
       `Source: ${report.dataSource}`,
       report.ageing ? `Ageing: ${report.ageing}` : '',
-      report.dashboard ? `Dashboard: ${report.dashboard}` : '',
+      report.dashboard ? `Dashboard: ${report.dashboard.label} (${report.dashboard.url})` : '',
       '',
       'Logic:',
       ...report.logic.map((l) => `• ${l}`),
@@ -176,7 +177,7 @@ function ReportDetail({
         </motion.h1>
         <p className="regarding">{report.regarding}</p>
         {report.dashboard && (
-          <p className="dashboard-ref detail-dashboard">Linked dashboard · {report.dashboard}</p>
+          <DashboardLink dashboard={report.dashboard} className="dashboard-ref detail-dashboard" />
         )}
         {!report.dashboard && report.id === 'p0-metric-report' && (
           <p className="dashboard-ref detail-dashboard muted-dash">Not a live dashboard — one Excel summary sheet.</p>

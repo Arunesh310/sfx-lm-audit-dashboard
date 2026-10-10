@@ -193,8 +193,33 @@
 .dashboard-ref {
   margin: 0.35rem 0 0;
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--sfx-muted);
+}
+
+.dashboard-anchor {
   color: var(--sfx-green-dark);
+  font-weight: 650;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 140, 68, 0.35);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-anchor:hover {
+  color: var(--sfx-green);
+  border-bottom-color: var(--sfx-green);
+}
+
+.dashboard-anchor .ext {
+  margin-left: 0.2em;
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+.dashboard-anchor:focus-visible {
+  outline: 2px solid var(--sfx-green);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .detail-dashboard {

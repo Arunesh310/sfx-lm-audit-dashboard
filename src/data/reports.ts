@@ -24,8 +24,8 @@ export type ReportDefinition = {
   views?: ReportView[]
   ageing?: string
   sharing: string
-  /** Live BI dashboard name, if any (P0 summary is Excel-only). */
-  dashboard?: string
+  /** Live BI dashboard (URLs from pendency logic PDF). */
+  dashboard?: { label: string; url: string }
   closureReport?: boolean
   notes?: string
 }
@@ -62,7 +62,10 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
-    dashboard: 'DC Floor Pendency',
+    dashboard: {
+      label: 'DC Floor Pendency',
+      url: 'https://analytics.zoho.in/workspace/159245000001470070/view/159245005933557801',
+    },
     closureReport: true,
   },
   {
@@ -97,7 +100,10 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
-    dashboard: 'LM Reverse Connection — Short Shipments in DC',
+    dashboard: {
+      label: 'LM Reverse Connection — Short Shipments in DC',
+      url: 'https://analytics.zoho.in/workspace/159245000001470070/view/159245003428839912',
+    },
     notes:
       'Automailer to Franchise Partners and SZMs with hub-level pendency and a Google Form link for bagging footage.',
   },
@@ -128,7 +134,10 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
-    dashboard: 'Open Runsheet Google Sheet (updated by BI team)',
+    dashboard: {
+      label: 'Open Runsheet Google Sheet (updated by BI team)',
+      url: 'https://docs.google.com/spreadsheets/d/1ACxSuS6f8uVA7RfOZYX6RVIbJeqPL5PuI-dp9ZOMGys/edit?gid=0#gid=0',
+    },
   },
   {
     id: 'reverse-pendency',
@@ -147,7 +156,10 @@ export const REPORTS: ReportDefinition[] = [
       'Output: one sheet of tagged AWBs.',
     ],
     sharing: 'Emailed to leadership; included in P0 Metrics Report.',
-    dashboard: 'Reverse Pendency Dashboard',
+    dashboard: {
+      label: 'Reverse Pendency Dashboard',
+      url: 'https://analytics.zoho.in/workspace/159245000001470070/view/159245000016805432',
+    },
   },
   {
     id: 'fwd-high-ageing',
@@ -164,7 +176,10 @@ export const REPORTS: ReportDefinition[] = [
       'Output: one sheet of tagged AWBs.',
     ],
     sharing: 'Emailed to leadership; included in P0 Metrics Report.',
-    dashboard: 'Fwd Pendency Dashboard',
+    dashboard: {
+      label: 'Fwd Pendency Dashboard',
+      url: 'https://analytics.zoho.in/workspace/159245000001470070/view/159245000014314500',
+    },
   },
   {
     id: 'cb-pendency',
@@ -196,7 +211,10 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
-    dashboard: 'Ecom LM Live Dashboard v3.0',
+    dashboard: {
+      label: 'Ecom LM Live Dashboard v3.0',
+      url: 'https://analytics.zoho.in/workspace/159245000286997288/view/159245007273104249',
+    },
     closureReport: true,
   },
   {
@@ -230,7 +248,10 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
-    dashboard: 'Ecom LM Live Dashboard v3.0',
+    dashboard: {
+      label: 'Ecom LM Live Dashboard v3.0',
+      url: 'https://analytics.zoho.in/workspace/159245000286997288/view/159245007273104249',
+    },
   },
   {
     id: 'p0-metric-report',
