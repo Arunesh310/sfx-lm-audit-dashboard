@@ -4,7 +4,7 @@ import { AnimatedNumber } from './components/AnimatedNumber'
 import { LiveIstClock } from './components/LiveIstClock'
 import { ScheduleDayRail } from './components/ScheduleDayRail'
 import { ScrollToTop } from './components/ScrollToTop'
-import { REPORTS, type ReportDefinition } from './data/reports'
+import { PROGRAM_SUMMARY, REPORTS, type ReportDefinition } from './data/reports'
 import { useNow } from './hooks/useNow'
 import {
   aggregateDailyStats,
@@ -55,7 +55,7 @@ function OverviewCard({
       aria-label={`Open ${report.title}`}
     >
       <div className="card-top">
-        <span className="index">{String(index + 1).padStart(2, '0')}</span>
+        <span className="index">{report.number}</span>
         <motion.span className="freq" layout transition={spring}>
           {report.frequency.label}
         </motion.span>
@@ -116,12 +116,21 @@ function ReportDetail({
 
   const copyLogic = async () => {
     const text = [
-      report.title,
+      `${report.number} ${report.title}`,
       report.regarding,
+      '',
+      `Source: ${report.dataSource}`,
+      report.ageing ? `Ageing: ${report.ageing}` : '',
       '',
       'Logic:',
       ...report.logic.map((l) => `• ${l}`),
-    ].join('\n')
+      '',
+      `Sharing: ${report.sharing}`,
+      report.closureReport ? 'Day-end closure report: yes' : '',
+      report.notes ?? '',
+    ]
+      .filter(Boolean)
+      .join('\n')
     await navigator.clipboard.writeText(text)
     setCopied(true)
     window.setTimeout(() => setCopied(false), 2000)
@@ -199,6 +208,30 @@ function ReportDetail({
         initial="hidden"
         animate="show"
       >
+        <h3>Data source</h3>
+        <p className="panel-body">{report.dataSource}</p>
+      </motion.section>
+
+      {report.ageing && (
+        <motion.section
+          className="panel"
+          custom={2}
+          variants={panelVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <h3>Ageing</h3>
+          <p className="panel-body">{report.ageing}</p>
+        </motion.section>
+      )}
+
+      <motion.section
+        className="panel"
+        custom={3}
+        variants={panelVariants}
+        initial="hidden"
+        animate="show"
+      >
         <h3>Logic</h3>
         <motion.ul className="logic" variants={staggerContainer} initial="initial" animate="animate">
           {report.logic.map((line, i) => (
@@ -213,7 +246,7 @@ function ReportDetail({
       {report.views && report.views.length > 0 && (
         <motion.section
           className="panel"
-          custom={2}
+          custom={4}
           variants={panelVariants}
           initial="hidden"
           animate="show"
@@ -230,10 +263,24 @@ function ReportDetail({
         </motion.section>
       )}
 
+      <motion.section
+        className="panel"
+        custom={5}
+        variants={panelVariants}
+        initial="hidden"
+        animate="show"
+      >
+        <h3>Sharing</h3>
+        <p className="panel-body">{report.sharing}</p>
+        {report.closureReport && (
+          <p className="panel-body closure-tag">Day-end closure report published.</p>
+        )}
+      </motion.section>
+
       {report.notes && (
         <motion.section
           className="panel note"
-          custom={3}
+          custom={6}
           variants={panelVariants}
           initial="hidden"
           animate="show"
@@ -400,8 +447,8 @@ export default function App() {
             whileHover={{ scale: 1.05, rotate: -2 }}
           />
           <div>
-            <p className="eyebrow">Shadowfax · LM audit</p>
-            <h1 className="title">Report schedule dashboard</h1>
+            <p className="eyebrow">Shadowfax · {PROGRAM_SUMMARY.documentDate}</p>
+            <h1 className="title">{PROGRAM_SUMMARY.title}</h1>
             <p className="subtitle">
               {dayLabel} · <LiveIstClock />
             </p>
@@ -426,7 +473,7 @@ export default function App() {
             <strong>
               <AnimatedNumber value={stats.sentSoFar} />
             </strong>{' '}
-            / {stats.expectedToday} sends today
+            / {stats.expectedToday} reports · 9:30 AM IST
           </span>
         </motion.div>
       </motion.header>
@@ -438,7 +485,7 @@ export default function App() {
           </TabButton>
           {REPORTS.map((r) => (
             <TabButton key={r.id} active={tab === r.id} onClick={() => goTab(r.id)}>
-              {r.title.replace(' alert', '').replace(' · to and fro Bamnoli', '')}
+              {r.number} {r.title.length > 18 ? r.title.split(' ')[0] : r.title}
             </TabButton>
           ))}
         </nav>
@@ -495,9 +542,8 @@ export default function App() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                Scheduled coverage — frequency, daily volume, and logic from{' '}
-                <code>src/data/reports.ts</code>. Press <kbd>1</kbd>–<kbd>{REPORTS.length}</kbd> to
-                jump to a report, <kbd>0</kbd> for overview.
+                {PROGRAM_SUMMARY.subtitle} {PROGRAM_SUMMARY.publishBy} Press <kbd>1</kbd>–
+                <kbd>{REPORTS.length}</kbd> for a report, <kbd>0</kbd> overview.
               </motion.p>
 
               <motion.div
