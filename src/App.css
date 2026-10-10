@@ -21,6 +21,7 @@
   flex-direction: column;
   min-height: min(420px, 52dvh);
   width: 100%;
+  min-width: 0;
 }
 
 .overview-page {
@@ -37,6 +38,7 @@
   flex: 1;
   width: 100%;
   gap: 0.25rem;
+  padding-bottom: clamp(0.5rem, 2vw, 1rem);
 }
 
 .overview-page .lede {
@@ -127,6 +129,7 @@
   height: 100%;
   background: linear-gradient(90deg, rgba(0, 140, 68, 0.12), rgba(0, 140, 68, 0.2));
   border-radius: inherit;
+  transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .summary-pill > span {
@@ -192,15 +195,12 @@
 .tab-btn.active {
   border-color: transparent;
   color: #fff;
-}
-
-.tab-highlight {
-  position: absolute;
-  inset: 0;
   background: linear-gradient(135deg, var(--sfx-green), var(--sfx-green-dark));
-  border-radius: inherit;
-  z-index: 0;
   box-shadow: 0 4px 14px rgba(0, 140, 68, 0.35);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .lede {
@@ -226,10 +226,8 @@
   min-height: 17.5rem;
   border-radius: 20px;
   padding: 1.05rem 1.1rem;
-  transition:
-    box-shadow 0.35s ease,
-    border-color 0.35s ease,
-    transform 0.35s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 17.5rem;
 }
 
 .card > * {
@@ -237,7 +235,22 @@
   z-index: 1;
 }
 
-.card.ios-glass:hover {
+.card-clickable {
+  cursor: pointer;
+  text-align: left;
+  backface-visibility: hidden;
+  transition:
+    transform 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 0.22s ease;
+}
+
+.card-clickable:active {
+  transform: scale(0.992);
+}
+
+.card.ios-glass.card-clickable:hover {
+  transform: translateY(-4px);
   border-color: var(--glass-border-soft);
   box-shadow: var(--glass-shadow-hover), var(--glass-inset);
 }
@@ -254,6 +267,7 @@
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--sfx-green), var(--sfx-green-dark));
+  transition: width 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .card-top {
@@ -432,8 +446,13 @@
   grid-template-columns: 1fr;
   gap: 0.85rem;
   margin-top: 0.85rem;
-  flex: 1;
+  margin-bottom: 0;
+  flex: 0 1 auto;
   align-content: start;
+}
+
+.detail-panels .panel:last-child {
+  margin-bottom: 0;
 }
 
 .detail-panels .panel {
@@ -654,11 +673,6 @@
   box-shadow: var(--glass-inset);
 }
 
-.card-clickable {
-  cursor: pointer;
-  text-align: left;
-}
-
 .card-clickable:focus-visible {
   outline: 2px solid var(--sfx-green);
   outline-offset: 2px;
@@ -740,6 +754,8 @@
   background: var(--sfx-green-dark);
   border-radius: 1px;
   box-shadow: 0 0 0 2px rgba(0, 140, 68, 0.2);
+  transition: left 0.45s linear;
+  will-change: left;
 }
 
 .day-rail-labels {
@@ -809,13 +825,12 @@
 .site-foot {
   position: relative;
   flex-shrink: 0;
-  margin-top: auto;
-  padding-top: clamp(1.5rem, 4vw, 2.25rem);
-  padding-bottom: 0;
+  z-index: 3;
+  /* gap above footer pill — do not fold into .ios-glass padding shorthand */
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
 }
 
 .site-foot.ios-glass {
-  margin-top: auto;
   padding: 0.85rem 1rem;
   border-radius: 16px;
   display: flex;
@@ -842,7 +857,7 @@ kbd {
 .scroll-top {
   position: fixed;
   right: max(1.25rem, env(safe-area-inset-right, 0px));
-  bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  bottom: calc(max(1.25rem, env(safe-area-inset-bottom, 0px)) + 3.25rem);
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
@@ -850,6 +865,18 @@ kbd {
   font-size: 1.1rem;
   cursor: pointer;
   z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.scroll-top.scroll-top-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .sr-only {

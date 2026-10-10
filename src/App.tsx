@@ -1,5 +1,5 @@
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { AnimatedNumber } from './components/AnimatedNumber'
 import { DashboardLink } from './components/DashboardLink'
 import { LiveIstClock } from './components/LiveIstClock'
@@ -16,32 +16,28 @@ import {
   scheduleSummary,
   sendsSoFarToday,
 } from './lib/schedule'
-import { fadeUp, spring, springSoft, staggerContainer, staggerItem } from './lib/motion'
+import { fadeUp, staggerContainer, staggerItem, tweenFast } from './lib/motion'
 import './App.css'
 
 type Tab = 'overview' | string
 type SortMode = 'order' | 'progress' | 'frequency'
 
-function OverviewCard({
+const OverviewCard = memo(function OverviewCard({
   report,
-  index,
   onOpen,
-  now,
+  scheduleNow,
 }: {
   report: ReportDefinition
-  index: number
   onOpen: () => void
-  now: Date
+  scheduleNow: Date
 }) {
   const perDay = expectedSendsPerDay(report.frequency)
-  const soFar = sendsSoFarToday(report.frequency, now)
+  const soFar = sendsSoFarToday(report.frequency, scheduleNow)
   const progress = perDay > 0 ? Math.min(100, (soFar / perDay) * 100) : 0
 
   return (
-    <motion.article
+    <article
       className="card card-clickable ios-glass"
-      variants={staggerItem}
-      layout
       role="button"
       tabIndex={0}
       onClick={onOpen}
@@ -51,28 +47,19 @@ function OverviewCard({
           onOpen()
         }
       }}
-      whileHover={{ y: -4, transition: springSoft }}
-      whileTap={{ scale: 0.992 }}
       aria-label={`Open ${report.title}`}
     >
       <div className="card-top">
         <span className="index">{report.number}</span>
-        <motion.span className="freq" layout transition={spring}>
-          {report.frequency.label}
-        </motion.span>
+        <span className="freq">{report.frequency.label}</span>
       </div>
       <h2>{report.title}</h2>
       {report.dashboard && <DashboardLink dashboard={report.dashboard} />}
       <p className="regarding">{report.regarding}</p>
-      <ScheduleDayRail frequency={report.frequency} compact now={now} />
+      <ScheduleDayRail frequency={report.frequency} compact now={scheduleNow} />
       <p className="schedule">{scheduleSummary(report.frequency)}</p>
       <div className="progress-track" aria-hidden>
-        <motion.div
-          className="progress-fill"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ ...springSoft, delay: 0.08 + index * 0.04 }}
-        />
+        <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
       <dl className="meta">
         <div>
@@ -90,31 +77,22 @@ function OverviewCard({
         </div>
       </dl>
       <span className="linkish">View logic →</span>
-    </motion.article>
+    </article>
   )
-}
+})
 
 function ReportDetail({
   report,
   onBack,
-  now,
+  scheduleNow,
 }: {
   report: ReportDefinition
   onBack: () => void
-  now: Date
+  scheduleNow: Date
 }) {
   const perDay = expectedSendsPerDay(report.frequency)
-  const soFar = sendsSoFarToday(report.frequency, now)
+  const soFar = sendsSoFarToday(report.frequency, scheduleNow)
   const [copied, setCopied] = useState(false)
-
-  const panelVariants = {
-    hidden: { opacity: 0, y: 16 },
-    show: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { ...springSoft, delay: 0.06 * i },
-    }),
-  }
 
   const copyLogic = async () => {
     const text = [
@@ -148,35 +126,21 @@ function ReportDetail({
       animate="animate"
       exit="exit"
       variants={fadeUp}
-      transition={spring}
+      transition={tweenFast}
     >
       <div className="detail-toolbar">
-        <motion.button
-          type="button"
-          className="back"
-          onClick={onBack}
-          whileHover={{ x: -3 }}
-          whileTap={{ scale: 0.97 }}
-          transition={springSoft}
-        >
+        <button type="button" className="back" onClick={onBack}>
           ← All reports
-        </motion.button>
-        <motion.button
-          type="button"
-          className="copy-btn ios-glass-pill"
-          onClick={copyLogic}
-          whileTap={{ scale: 0.97 }}
-        >
+        </button>
+        <button type="button" className="copy-btn ios-glass-pill" onClick={copyLogic}>
           {copied ? 'Copied' : 'Copy logic'}
-        </motion.button>
+        </button>
       </div>
       <header className="detail-head ios-glass ios-glass-strong">
         <p className="freq-line">
           {report.frequency.label} · {scheduleSummary(report.frequency)}
         </p>
-        <motion.h1 layout="position" transition={spring}>
-          {report.title}
-        </motion.h1>
+        <h1>{report.title}</h1>
         <p className="regarding">{report.regarding}</p>
         {report.dashboard && (
           <DashboardLink dashboard={report.dashboard} className="dashboard-ref detail-dashboard" />
@@ -187,119 +151,77 @@ function ReportDetail({
       </header>
 
       <div className="detail-panels">
-      <motion.section
-        className="panel ios-glass"
-        custom={0}
-        variants={panelVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <h3>Today · IST</h3>
-        <ScheduleDayRail frequency={report.frequency} now={now} />
-        <ul className="stats-inline">
-          <li>
-            <strong>
-              <AnimatedNumber value={soFar} />
-            </strong>{' '}
-            sent so far
-          </li>
-          <li>
-            <strong>
-              <AnimatedNumber value={perDay} />
-            </strong>{' '}
-            scheduled per day
-          </li>
-          <li>Next slot · {nextSendLabel(report.frequency, now)}</li>
-        </ul>
-      </motion.section>
+        <section className="panel ios-glass">
+          <h3>Today · IST</h3>
+          <ScheduleDayRail frequency={report.frequency} now={scheduleNow} />
+          <ul className="stats-inline">
+            <li>
+              <strong>
+                <AnimatedNumber value={soFar} />
+              </strong>{' '}
+              sent so far
+            </li>
+            <li>
+              <strong>
+                <AnimatedNumber value={perDay} />
+              </strong>{' '}
+              scheduled per day
+            </li>
+            <li>Next slot · {nextSendLabel(report.frequency, scheduleNow)}</li>
+          </ul>
+        </section>
 
-      <motion.section
-        className="panel ios-glass"
-        custom={1}
-        variants={panelVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <h3>Data source</h3>
-        <p className="panel-body">{report.dataSource}</p>
-      </motion.section>
+        <section className="panel ios-glass">
+          <h3>Data source</h3>
+          <p className="panel-body">{report.dataSource}</p>
+        </section>
 
-      {report.ageing && (
-        <motion.section
-          className="panel ios-glass"
-          custom={2}
-          variants={panelVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <h3>Ageing</h3>
-          <p className="panel-body">{report.ageing}</p>
-        </motion.section>
-      )}
+        {report.ageing && (
+          <section className="panel ios-glass">
+            <h3>Ageing</h3>
+            <p className="panel-body">{report.ageing}</p>
+          </section>
+        )}
 
-      <motion.section
-        className="panel ios-glass panel-span-full"
-        custom={3}
-        variants={panelVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <h3>Logic</h3>
-        <motion.ul className="logic" variants={staggerContainer} initial="initial" animate="animate">
-          {report.logic.map((line, i) => (
-            <motion.li key={line} variants={staggerItem} className="logic-item">
-              <span className="logic-num">{i + 1}</span>
-              <span>{line}</span>
-            </motion.li>
-          ))}
-        </motion.ul>
-      </motion.section>
-
-      {report.views && report.views.length > 0 && (
-        <motion.section
-          className="panel ios-glass panel-span-full"
-          custom={4}
-          variants={panelVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <h3>Views</h3>
-          <ul className="views">
-            {report.views.map((v) => (
-              <li key={v.id}>
-                <strong>{v.label}</strong>
-                <span>{v.description}</span>
+        <section className="panel ios-glass panel-span-full">
+          <h3>Logic</h3>
+          <ul className="logic">
+            {report.logic.map((line, i) => (
+              <li key={line} className="logic-item">
+                <span className="logic-num">{i + 1}</span>
+                <span>{line}</span>
               </li>
             ))}
           </ul>
-        </motion.section>
-      )}
+        </section>
 
-      <motion.section
-        className="panel ios-glass"
-        custom={5}
-        variants={panelVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <h3>Sharing</h3>
-        <p className="panel-body">{report.sharing}</p>
-        {report.closureReport && (
-          <p className="panel-body closure-tag">Day-end closure report published.</p>
+        {report.views && report.views.length > 0 && (
+          <section className="panel ios-glass panel-span-full">
+            <h3>Views</h3>
+            <ul className="views">
+              {report.views.map((v) => (
+                <li key={v.id}>
+                  <strong>{v.label}</strong>
+                  <span>{v.description}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
-      </motion.section>
 
-      {report.notes && (
-        <motion.section
-          className="panel note ios-glass panel-span-full"
-          custom={6}
-          variants={panelVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <p>{report.notes}</p>
-        </motion.section>
-      )}
+        <section className="panel ios-glass">
+          <h3>Sharing</h3>
+          <p className="panel-body">{report.sharing}</p>
+          {report.closureReport && (
+            <p className="panel-body closure-tag">Day-end closure report published.</p>
+          )}
+        </section>
+
+        {report.notes && (
+          <section className="panel note ios-glass panel-span-full">
+            <p>{report.notes}</p>
+          </section>
+        )}
       </div>
     </motion.div>
   )
@@ -316,7 +238,6 @@ function TabButton({
 }) {
   return (
     <button type="button" className={`tab-btn ${active ? 'active' : ''}`} onClick={onClick}>
-      {active && <motion.span className="tab-highlight" layoutId="tab-pill" transition={spring} />}
       <span className="tab-label">{children}</span>
     </button>
   )
@@ -335,12 +256,7 @@ function OverviewStats({
     stats.expectedToday > 0 ? Math.round((stats.sentSoFar / stats.expectedToday) * 100) : 0
 
   return (
-    <motion.div
-      className="stats-strip glass-stats"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ ...springSoft, delay: 0.08 }}
-    >
+    <div className="stats-strip glass-stats">
       <div className="stat-cell ios-glass">
         <span className="stat-label">Report types</span>
         <span className="stat-value">{reportCount}</span>
@@ -367,7 +283,7 @@ function OverviewStats({
           )}
         </span>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -377,9 +293,10 @@ export default function App() {
   const [sort, setSort] = useState<SortMode>('order')
   const now = useNow()
 
-  const { label: dayLabel } = istParts(now)
-  const stats = aggregateDailyStats(REPORTS, now)
-  const next = nextGlobalSend(REPORTS, now)
+  const scheduleNow = useMemo(() => now, [now.getTime()])
+  const { label: dayLabel } = istParts(scheduleNow)
+  const stats = useMemo(() => aggregateDailyStats(REPORTS, scheduleNow), [scheduleNow])
+  const next = useMemo(() => nextGlobalSend(REPORTS, scheduleNow), [scheduleNow])
   const dayProgress =
     stats.expectedToday > 0 ? Math.min(100, (stats.sentSoFar / stats.expectedToday) * 100) : 0
 
@@ -387,7 +304,7 @@ export default function App() {
 
   const goTab = useCallback((nextTab: Tab) => {
     setTab(nextTab)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo(0, 0)
   }, [])
 
   const filteredReports = useMemo(() => {
@@ -404,14 +321,14 @@ export default function App() {
     if (sort === 'progress') {
       list.sort(
         (a, b) =>
-          sendsSoFarToday(b.frequency, now) / expectedSendsPerDay(b.frequency) -
-          sendsSoFarToday(a.frequency, now) / expectedSendsPerDay(a.frequency),
+          sendsSoFarToday(b.frequency, scheduleNow) / expectedSendsPerDay(b.frequency) -
+          sendsSoFarToday(a.frequency, scheduleNow) / expectedSendsPerDay(a.frequency),
       )
     } else if (sort === 'frequency') {
       list.sort((a, b) => expectedSendsPerDay(b.frequency) - expectedSendsPerDay(a.frequency))
     }
     return list
-  }, [query, sort, now])
+  }, [query, sort, scheduleNow])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -441,24 +358,9 @@ export default function App() {
         Skip to content
       </a>
 
-      <motion.header
-        className="mast ios-glass ios-glass-strong"
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ...spring, delay: 0.05 }}
-      >
+      <header className="mast ios-glass ios-glass-strong">
         <div className="brand">
-          <motion.img
-            className="logo"
-            src="/logo.webp"
-            alt="Shadowfax"
-            width={40}
-            height={40}
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={spring}
-            whileHover={{ scale: 1.05, rotate: -2 }}
-          />
+          <img className="logo" src="/logo.webp" alt="Shadowfax" width={40} height={40} />
           <div>
             <p className="eyebrow">Shadowfax · {PROGRAM_SUMMARY.documentDate}</p>
             <h1 className="title">{PROGRAM_SUMMARY.title}</h1>
@@ -467,20 +369,12 @@ export default function App() {
             </p>
           </div>
         </div>
-        <motion.div
+        <div
           className="summary-pill ios-glass ios-glass-pill"
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ ...springSoft, delay: 0.12 }}
           title={`${Math.round(dayProgress)}% of scheduled sends have passed today`}
         >
           <div className="summary-progress" aria-hidden>
-            <motion.div
-              className="summary-progress-fill"
-              initial={{ width: 0 }}
-              animate={{ width: `${dayProgress}%` }}
-              transition={{ ...springSoft, delay: 0.2 }}
-            />
+            <div className="summary-progress-fill" style={{ width: `${dayProgress}%` }} />
           </div>
           <span>
             <strong>
@@ -488,23 +382,21 @@ export default function App() {
             </strong>{' '}
             / {stats.expectedToday} scheduled sends · IST
           </span>
-        </motion.div>
-      </motion.header>
-
-      <LayoutGroup>
-        <div className="tabs-scroll">
-          <nav className="tabs ios-glass" aria-label="Reports">
-            <TabButton active={tab === 'overview'} onClick={() => goTab('overview')}>
-              Overview
-            </TabButton>
-            {REPORTS.map((r) => (
-              <TabButton key={r.id} active={tab === r.id} onClick={() => goTab(r.id)}>
-                {r.number} {r.title.length > 18 ? r.title.split(' ')[0] : r.title}
-              </TabButton>
-            ))}
-          </nav>
         </div>
-      </LayoutGroup>
+      </header>
+
+      <div className="tabs-scroll">
+        <nav className="tabs ios-glass" aria-label="Reports">
+          <TabButton active={tab === 'overview'} onClick={() => goTab('overview')}>
+            Overview
+          </TabButton>
+          {REPORTS.map((r) => (
+            <TabButton key={r.id} active={tab === r.id} onClick={() => goTab(r.id)}>
+              {r.number} {r.title.length > 18 ? r.title.split(' ')[0] : r.title}
+            </TabButton>
+          ))}
+        </nav>
+      </div>
 
       <main id="main-content" className="main-stage">
         <AnimatePresence mode="wait">
@@ -516,19 +408,14 @@ export default function App() {
               animate="animate"
               exit="exit"
               variants={fadeUp}
-              transition={spring}
+              transition={tweenFast}
             >
               <OverviewStats stats={stats} reportCount={REPORTS.length} next={next} />
 
-              <motion.p
-                className="lede"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
+              <p className="lede">
                 {PROGRAM_SUMMARY.subtitle} {PROGRAM_SUMMARY.publishBy} Press <kbd>1</kbd>–
                 <kbd>{REPORTS.length}</kbd> for a report, <kbd>0</kbd> overview.
-              </motion.p>
+              </p>
 
               <div className="toolbar">
                 <label className="search-wrap">
@@ -568,19 +455,12 @@ export default function App() {
                 variants={staggerContainer}
                 initial="initial"
                 animate="animate"
-                layout
               >
-                <AnimatePresence mode="popLayout">
-                  {filteredReports.map((r, i) => (
-                    <OverviewCard
-                      key={r.id}
-                      index={i}
-                      report={r}
-                      onOpen={() => goTab(r.id)}
-                      now={now}
-                    />
-                  ))}
-                </AnimatePresence>
+                {filteredReports.map((r) => (
+                  <motion.div key={r.id} variants={staggerItem} transition={tweenFast}>
+                    <OverviewCard report={r} onOpen={() => goTab(r.id)} scheduleNow={scheduleNow} />
+                  </motion.div>
+                ))}
               </motion.div>
 
               {filteredReports.length === 0 && (
@@ -589,13 +469,18 @@ export default function App() {
             </motion.div>
           )}
           {active && (
-            <ReportDetail key={active.id} report={active} onBack={() => goTab('overview')} now={now} />
+            <ReportDetail
+              key={active.id}
+              report={active}
+              onBack={() => goTab('overview')}
+              scheduleNow={scheduleNow}
+            />
           )}
         </AnimatePresence>
       </main>
 
       <footer className="site-foot ios-glass">
-        <span>Schedules in IST · updates every 30s</span>
+        <span>Schedules in IST · updates every minute</span>
         <span className="kbd-hint">Esc · back</span>
       </footer>
 

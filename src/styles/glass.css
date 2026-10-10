@@ -1,6 +1,7 @@
 /* iOS-style frosted glass — visible blur, light catch on top edge */
 .ios-glass {
   position: relative;
+  contain: layout style paint;
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.58) 0%,

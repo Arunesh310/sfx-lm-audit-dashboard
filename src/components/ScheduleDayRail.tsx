@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion'
+import { memo, useMemo } from 'react'
 import type { ReportFrequency } from '../data/reports'
 import { getSendMarkers, istParts } from '../lib/schedule'
-import { springSoft } from '../lib/motion'
 
 type Props = {
   frequency: ReportFrequency
@@ -9,10 +8,12 @@ type Props = {
   now?: Date
 }
 
-export function ScheduleDayRail({ frequency, compact, now = new Date() }: Props) {
-  const markers = getSendMarkers(frequency, now)
-  const { minutesSinceMidnight } = istParts(now)
-  const nowPct = (minutesSinceMidnight / (24 * 60)) * 100
+function ScheduleDayRailInner({ frequency, compact, now = new Date() }: Props) {
+  const markers = useMemo(() => getSendMarkers(frequency, now), [frequency, now])
+  const nowPct = useMemo(() => {
+    const { minutesSinceMidnight } = istParts(now)
+    return (minutesSinceMidnight / (24 * 60)) * 100
+  }, [now])
 
   return (
     <div
@@ -24,24 +25,15 @@ export function ScheduleDayRail({ frequency, compact, now = new Date() }: Props)
         {markers.map((mark) => {
           const left = (mark.minute / (24 * 60)) * 100
           return (
-            <motion.span
+            <span
               key={mark.minute}
               className={`day-rail-dot ${mark.passed ? 'passed' : 'upcoming'}`}
               style={{ left: `${left}%` }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ ...springSoft, delay: left / 200 }}
               title={`${String(Math.floor(mark.minute / 60)).padStart(2, '0')}:${String(mark.minute % 60).padStart(2, '0')}`}
             />
           )
         })}
-        <motion.span
-          className="day-rail-now"
-          style={{ left: `${nowPct}%` }}
-          layout
-          transition={springSoft}
-          aria-hidden
-        />
+        <span className="day-rail-now" style={{ left: `${nowPct}%` }} aria-hidden />
       </div>
       {!compact && (
         <div className="day-rail-labels">
@@ -53,3 +45,5 @@ export function ScheduleDayRail({ frequency, compact, now = new Date() }: Props)
     </div>
   )
 }
+
+export const ScheduleDayRail = memo(ScheduleDayRailInner)
