@@ -1,11 +1,3 @@
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), var(--glass-inset);
-}
-
 .shell {
   max-width: 960px;
   margin: 0 auto;
@@ -18,18 +10,19 @@
 }
 
 .mast {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1.15rem 1.25rem;
-  border-radius: 20px;
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(22px) saturate(170%);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), var(--glass-inset);
+  border-radius: 22px;
+}
+
+.mast > * {
+  position: relative;
+  z-index: 1;
 }
 
 .brand {
@@ -74,13 +67,8 @@
   overflow: hidden;
   padding: 0.5rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   font-size: 0.82rem;
   white-space: nowrap;
-  box-shadow: var(--glass-inset), 0 4px 16px rgba(0, 140, 68, 0.1);
 }
 
 .summary-progress {
@@ -105,17 +93,17 @@
 }
 
 .tabs {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-bottom: 1.25rem;
   padding: 0.45rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-inset);
+}
+
+.tabs .tab-btn {
+  z-index: 1;
 }
 
 .tab-btn {
@@ -168,20 +156,21 @@
 }
 
 .card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(155%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(155%);
-  border: 1px solid var(--glass-border);
-  border-radius: 18px;
+  position: relative;
+  border-radius: 20px;
   padding: 1rem 1.05rem;
-  box-shadow: var(--glass-shadow), var(--glass-inset);
   transition:
     box-shadow 0.35s ease,
     border-color 0.35s ease,
     transform 0.35s ease;
 }
 
-.card:hover {
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.card.ios-glass:hover {
   border-color: var(--glass-border-soft);
   box-shadow: var(--glass-shadow-hover), var(--glass-inset);
 }
@@ -344,25 +333,27 @@
 }
 
 .detail-head {
+  position: relative;
   padding: 1rem 1.1rem;
   margin-bottom: 0.25rem;
-  border-radius: 18px;
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), var(--glass-inset);
+  border-radius: 20px;
+}
+
+.detail-head > * {
+  position: relative;
+  z-index: 1;
 }
 
 .panel {
+  position: relative;
   margin-top: 1rem;
   padding: 1rem 1.05rem;
-  border: 1px solid var(--glass-border);
-  border-radius: 18px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
-  box-shadow: var(--glass-shadow), var(--glass-inset);
+  border-radius: 20px;
+}
+
+.panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .panel h3 {
@@ -468,13 +459,14 @@
 }
 
 .stat-cell {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px) saturate(155%);
-  -webkit-backdrop-filter: blur(14px) saturate(155%);
-  border: 1px solid var(--glass-border);
-  border-radius: 14px;
+  position: relative;
+  border-radius: 16px;
   padding: 0.65rem 0.75rem;
-  box-shadow: var(--glass-inset), 0 4px 16px rgba(0, 107, 53, 0.06);
+}
+
+.stat-cell > * {
+  position: relative;
+  z-index: 1;
 }
 
 .stat-cell-wide {
@@ -520,15 +512,10 @@
 .search-wrap input {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--glass-border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   font: inherit;
   font-size: 0.85rem;
   outline: none;
-  box-shadow: var(--glass-inset);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -665,15 +652,11 @@
 }
 
 .copy-btn {
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(10px);
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
   font-size: 0.78rem;
   cursor: pointer;
   color: var(--sfx-green-dark);
-  box-shadow: var(--glass-inset);
 }
 
 .logic {
@@ -711,12 +694,10 @@
 }
 
 .site-foot {
+  position: relative;
   margin-top: 2.5rem;
   padding: 0.85rem 1rem;
-  border-radius: 14px;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(12px);
+  border-radius: 16px;
   display: flex;
   justify-content: space-between;
   font-size: 0.72rem;
@@ -740,17 +721,12 @@ kbd {
   position: fixed;
   right: 1.25rem;
   bottom: 1.25rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 50%;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
   color: var(--sfx-green-dark);
   font-size: 1.1rem;
   cursor: pointer;
-  box-shadow: var(--glass-shadow), var(--glass-inset);
   z-index: 50;
 }
 

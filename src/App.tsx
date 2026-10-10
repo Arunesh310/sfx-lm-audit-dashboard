@@ -39,7 +39,7 @@ function OverviewCard({
 
   return (
     <motion.article
-      className="card card-clickable"
+      className="card card-clickable ios-glass"
       variants={staggerItem}
       layout
       role="button"
@@ -161,14 +161,14 @@ function ReportDetail({
         </motion.button>
         <motion.button
           type="button"
-          className="copy-btn"
+          className="copy-btn ios-glass-pill"
           onClick={copyLogic}
           whileTap={{ scale: 0.97 }}
         >
           {copied ? 'Copied' : 'Copy logic'}
         </motion.button>
       </div>
-      <header className="detail-head">
+      <header className="detail-head ios-glass ios-glass-strong">
         <p className="freq-line">
           {report.frequency.label} · {scheduleSummary(report.frequency)}
         </p>
@@ -185,7 +185,7 @@ function ReportDetail({
       </header>
 
       <motion.section
-        className="panel"
+        className="panel ios-glass"
         custom={0}
         variants={panelVariants}
         initial="hidden"
@@ -211,7 +211,7 @@ function ReportDetail({
       </motion.section>
 
       <motion.section
-        className="panel"
+        className="panel ios-glass"
         custom={1}
         variants={panelVariants}
         initial="hidden"
@@ -223,7 +223,7 @@ function ReportDetail({
 
       {report.ageing && (
         <motion.section
-          className="panel"
+          className="panel ios-glass"
           custom={2}
           variants={panelVariants}
           initial="hidden"
@@ -235,7 +235,7 @@ function ReportDetail({
       )}
 
       <motion.section
-        className="panel"
+        className="panel ios-glass"
         custom={3}
         variants={panelVariants}
         initial="hidden"
@@ -254,7 +254,7 @@ function ReportDetail({
 
       {report.views && report.views.length > 0 && (
         <motion.section
-          className="panel"
+          className="panel ios-glass"
           custom={4}
           variants={panelVariants}
           initial="hidden"
@@ -273,7 +273,7 @@ function ReportDetail({
       )}
 
       <motion.section
-        className="panel"
+        className="panel ios-glass"
         custom={5}
         variants={panelVariants}
         initial="hidden"
@@ -288,7 +288,7 @@ function ReportDetail({
 
       {report.notes && (
         <motion.section
-          className="panel note"
+          className="panel note ios-glass"
           custom={6}
           variants={panelVariants}
           initial="hidden"
@@ -332,26 +332,26 @@ function OverviewStats({
 
   return (
     <motion.div
-      className="stats-strip"
+      className="stats-strip glass-stats"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...springSoft, delay: 0.08 }}
     >
-      <div className="stat-cell">
+      <div className="stat-cell ios-glass">
         <span className="stat-label">Report types</span>
         <span className="stat-value">{reportCount}</span>
       </div>
-      <div className="stat-cell">
+      <div className="stat-cell ios-glass">
         <span className="stat-label">Day progress</span>
         <span className="stat-value">{completion}%</span>
       </div>
-      <div className="stat-cell">
+      <div className="stat-cell ios-glass">
         <span className="stat-label">Remaining today</span>
         <span className="stat-value">
           <AnimatedNumber value={Math.max(0, stats.remainingToday)} />
         </span>
       </div>
-      <div className="stat-cell stat-cell-wide">
+      <div className="stat-cell stat-cell-wide ios-glass">
         <span className="stat-label">Next send</span>
         <span className="stat-value stat-value-sm">
           {next ? (
@@ -438,7 +438,7 @@ export default function App() {
       </a>
 
       <motion.header
-        className="mast"
+        className="mast ios-glass ios-glass-strong"
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ...spring, delay: 0.05 }}
@@ -464,7 +464,7 @@ export default function App() {
           </div>
         </div>
         <motion.div
-          className="summary-pill"
+          className="summary-pill ios-glass ios-glass-pill"
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ ...springSoft, delay: 0.12 }}
@@ -488,7 +488,7 @@ export default function App() {
       </motion.header>
 
       <LayoutGroup>
-        <nav className="tabs" aria-label="Reports">
+        <nav className="tabs ios-glass" aria-label="Reports">
           <TabButton active={tab === 'overview'} onClick={() => goTab('overview')}>
             Overview
           </TabButton>
@@ -518,6 +518,7 @@ export default function App() {
                   <span className="sr-only">Search reports</span>
                   <input
                     id="report-search"
+                    className="ios-glass-input"
                     type="search"
                     placeholder="Search reports…  ( / )"
                     value={query}
@@ -586,7 +587,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="site-foot">
+      <footer className="site-foot ios-glass">
         <span>Schedules in IST · updates every 30s</span>
         <span className="kbd-hint">Esc · back</span>
       </footer>

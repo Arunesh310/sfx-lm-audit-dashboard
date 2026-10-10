@@ -6,14 +6,23 @@
   --sfx-muted: #5c6470;
   --sfx-border: rgba(2, 8, 23, 0.08);
   --sfx-surface: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.52);
-  --glass-bg-strong: rgba(255, 255, 255, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.75);
-  --glass-border-soft: rgba(0, 140, 68, 0.12);
-  --glass-blur: 18px;
-  --glass-shadow: 0 8px 32px rgba(0, 107, 53, 0.08), 0 2px 8px rgba(2, 8, 23, 0.04);
-  --glass-shadow-hover: 0 16px 48px rgba(0, 140, 68, 0.14), 0 4px 12px rgba(2, 8, 23, 0.06);
-  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.22);
+  --glass-bg-strong: rgba(255, 255, 255, 0.32);
+  --glass-border: rgba(255, 255, 255, 0.62);
+  --glass-border-soft: rgba(0, 140, 68, 0.2);
+  --glass-blur: 44px;
+  --glass-blur-strong: 52px;
+  --glass-saturate: 195%;
+  --glass-shadow:
+    0 14px 44px rgba(0, 90, 50, 0.14),
+    0 4px 14px rgba(2, 8, 23, 0.07);
+  --glass-shadow-hover:
+    0 22px 56px rgba(0, 140, 68, 0.2),
+    0 8px 20px rgba(2, 8, 23, 0.08);
+  --glass-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.35);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-synthesis: none;
@@ -35,7 +44,7 @@ body,
 }
 
 body {
-  background: linear-gradient(165deg, #f8f7ef 0%, var(--sfx-cream) 40%, #eef6f0 100%);
+  background: linear-gradient(160deg, #e8f5ec 0%, var(--sfx-cream) 35%, #dceee3 70%, #c5e6d4 100%);
   color: var(--sfx-ink);
   overflow-x: hidden;
 }
@@ -47,10 +56,11 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 50% at 5% 0%, rgba(0, 140, 68, 0.14), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 100% 5%, rgba(0, 107, 53, 0.11), transparent 50%),
-    radial-gradient(ellipse 70% 40% at 50% 100%, rgba(0, 140, 68, 0.08), transparent 50%),
-    radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.5), transparent 35%);
+    radial-gradient(circle 420px at 8% 15%, rgba(0, 140, 68, 0.35), transparent 70%),
+    radial-gradient(circle 380px at 92% 12%, rgba(0, 107, 53, 0.28), transparent 68%),
+    radial-gradient(circle 500px at 55% 88%, rgba(0, 160, 80, 0.22), transparent 65%),
+    radial-gradient(circle 280px at 72% 45%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(circle 320px at 18% 72%, rgba(0, 140, 68, 0.18), transparent 62%);
   animation: ambience 18s ease-in-out infinite alternate;
 }
 

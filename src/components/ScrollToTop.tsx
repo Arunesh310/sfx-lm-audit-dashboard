@@ -17,7 +17,7 @@ export function ScrollToTop() {
       {visible && (
         <motion.button
           type="button"
-          className="scroll-top"
+          className="scroll-top ios-glass"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 8 }}
