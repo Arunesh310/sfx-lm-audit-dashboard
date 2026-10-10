@@ -61,6 +61,7 @@ function OverviewCard({
         </motion.span>
       </div>
       <h2>{report.title}</h2>
+      {report.dashboard && <p className="dashboard-ref">Dashboard · {report.dashboard}</p>}
       <p className="regarding">{report.regarding}</p>
       <ScheduleDayRail frequency={report.frequency} compact now={now} />
       <p className="schedule">{scheduleSummary(report.frequency)}</p>
@@ -121,6 +122,7 @@ function ReportDetail({
       '',
       `Source: ${report.dataSource}`,
       report.ageing ? `Ageing: ${report.ageing}` : '',
+      report.dashboard ? `Dashboard: ${report.dashboard}` : '',
       '',
       'Logic:',
       ...report.logic.map((l) => `• ${l}`),
@@ -173,6 +175,12 @@ function ReportDetail({
           {report.title}
         </motion.h1>
         <p className="regarding">{report.regarding}</p>
+        {report.dashboard && (
+          <p className="dashboard-ref detail-dashboard">Linked dashboard · {report.dashboard}</p>
+        )}
+        {!report.dashboard && report.id === 'p0-metric-report' && (
+          <p className="dashboard-ref detail-dashboard muted-dash">Not a live dashboard — one Excel summary sheet.</p>
+        )}
       </header>
 
       <motion.section

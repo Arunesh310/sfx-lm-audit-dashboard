@@ -1,5 +1,5 @@
 /**
- * Pendency report coverage — logic from “Intransit Pendency logic (end to end)” (Oct 10, 2026).
+ * Pendency report coverage — “Intransit Pendency logic (end to end) (1)” (Oct 10, 2026 · @abinthomas).
  * All reports publish by 9:30 AM IST daily unless noted.
  */
 
@@ -24,6 +24,8 @@ export type ReportDefinition = {
   views?: ReportView[]
   ageing?: string
   sharing: string
+  /** Live BI dashboard name, if any (P0 summary is Excel-only). */
+  dashboard?: string
   closureReport?: boolean
   notes?: string
 }
@@ -60,6 +62,7 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
+    dashboard: 'DC Floor Pendency',
     closureReport: true,
   },
   {
@@ -94,6 +97,7 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
+    dashboard: 'LM Reverse Connection — Short Shipments in DC',
     notes:
       'Automailer to Franchise Partners and SZMs with hub-level pendency and a Google Form link for bagging footage.',
   },
@@ -124,6 +128,7 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
+    dashboard: 'Open Runsheet Google Sheet (updated by BI team)',
   },
   {
     id: 'reverse-pendency',
@@ -141,7 +146,8 @@ export const REPORTS: ReportDefinition[] = [
       'Leadership roll-up: C & B Pendency (bagging + connection), LM-ODC, RTS Pendency (all other tags).',
       'Output: one sheet of tagged AWBs.',
     ],
-    sharing: 'Emailed to leadership; included in P0 Metric Report.',
+    sharing: 'Emailed to leadership; included in P0 Metrics Report.',
+    dashboard: 'Reverse Pendency Dashboard',
   },
   {
     id: 'fwd-high-ageing',
@@ -157,7 +163,8 @@ export const REPORTS: ReportDefinition[] = [
       'Unmatched locations → separate unmatched list for follow-up.',
       'Output: one sheet of tagged AWBs.',
     ],
-    sharing: 'Emailed to leadership; included in P0 Metric Report.',
+    sharing: 'Emailed to leadership; included in P0 Metrics Report.',
+    dashboard: 'Fwd Pendency Dashboard',
   },
   {
     id: 'cb-pendency',
@@ -189,6 +196,7 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
+    dashboard: 'Ecom LM Live Dashboard v3.0',
     closureReport: true,
   },
   {
@@ -222,17 +230,19 @@ export const REPORTS: ReportDefinition[] = [
       },
     ],
     sharing: LM_AUDIT_SHARING,
+    dashboard: 'Ecom LM Live Dashboard v3.0',
   },
   {
     id: 'p0-metric-report',
     number: '08',
-    title: 'P0 Metric Report',
+    title: 'P0 Metrics Report',
     regarding:
-      '19 P0 metrics on one page vs BIC — last 4 weeks and last 7 days trend; mailed to leadership.',
+      '19 P0 metrics on one page vs BIC — last 4 weeks and last 7 days trend (Excel summary, not a live dashboard).',
     frequency: DAILY_930,
     dataSource:
       'Latest outputs: CB Pendency, Shipments Tally, DCH short shipments, LM ODC, Intransit, Fwd High Ageing, Open runsheet, Jul–Sep picked RTS pendency file.',
     logic: [
+      'Summary built from all other reports on one page — not a dashboard.',
       '10 P0 metrics for LM Audit vs fixed BIC with weekly and daily trend.',
       'Groups: Shipments Tally (overall, Self Hub, Franchise); Bagging & Connection; Short Shipments (DCH, LM-ODC); Intransit (fwd/rev × zonal/intracity/tertiary); Fwd High Ageing (AD/JIT, BRSNR, PU Inmanifest, Open runsheets); RTS pendency.',
       'Trend: last 4 weeks and last 7 days, skip Sundays. Current week = avg of last 7 days; each Monday lock prior week using Saturday value.',
@@ -240,7 +250,7 @@ export const REPORTS: ReportDefinition[] = [
       'Row colours green→red: lower better for pendency, higher better for Tally %.',
       'History persisted between runs; output one Excel sheet.',
     ],
-    sharing: 'Emailed to leadership.',
+    sharing: 'Emailed to leadership and other team members.',
     notes:
       'In progress: automailer per SZM with consolidated AOR pendency. Day-end closure also produced for Intransit, DCH Short Shipments and CB Pendency.',
   },
@@ -249,7 +259,7 @@ export const REPORTS: ReportDefinition[] = [
 export const PROGRAM_SUMMARY = {
   title: 'Pendency report coverage',
   subtitle:
-    'Eight reports track pendency and scan adherence across the network; each shows what it covers.',
+    'Eight reports track pendency and scan adherence across the network; this page shows what each one covers.',
   publishBy: 'All reports are published and sent by 9:30 AM IST every day.',
-  documentDate: 'Oct 10, 2026',
+  documentDate: 'Oct 10, 2026 · @abinthomas',
 }

@@ -190,6 +190,22 @@
   font-weight: 650;
 }
 
+.dashboard-ref {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--sfx-green-dark);
+}
+
+.detail-dashboard {
+  margin-top: 0.65rem;
+}
+
+.muted-dash {
+  color: var(--sfx-muted);
+  font-weight: 500;
+}
+
 .regarding {
   margin: 0.45rem 0 0;
   font-size: 0.84rem;
