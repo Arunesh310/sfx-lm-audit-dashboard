@@ -11,7 +11,6 @@ import {
   aggregateDailyStats,
   expectedSendsPerDay,
   istParts,
-  nextGlobalSend,
   nextSendLabel,
   scheduleSummary,
   sendsSoFarToday,
@@ -243,50 +242,6 @@ function TabButton({
   )
 }
 
-function OverviewStats({
-  stats,
-  reportCount,
-  next,
-}: {
-  stats: ReturnType<typeof aggregateDailyStats>
-  reportCount: number
-  next: ReturnType<typeof nextGlobalSend>
-}) {
-  const completion =
-    stats.expectedToday > 0 ? Math.round((stats.sentSoFar / stats.expectedToday) * 100) : 0
-
-  return (
-    <div className="stats-strip glass-stats">
-      <div className="stat-cell ios-glass">
-        <span className="stat-label">Report types</span>
-        <span className="stat-value">{reportCount}</span>
-      </div>
-      <div className="stat-cell ios-glass">
-        <span className="stat-label">Day progress</span>
-        <span className="stat-value">{completion}%</span>
-      </div>
-      <div className="stat-cell ios-glass">
-        <span className="stat-label">Remaining today</span>
-        <span className="stat-value">
-          <AnimatedNumber value={Math.max(0, stats.remainingToday)} />
-        </span>
-      </div>
-      <div className="stat-cell stat-cell-wide ios-glass">
-        <span className="stat-label">Next send</span>
-        <span className="stat-value stat-value-sm">
-          {next ? (
-            <>
-              {next.report.title.split(' ').slice(0, 3).join(' ')} · {next.label}
-            </>
-          ) : (
-            'None left today'
-          )}
-        </span>
-      </div>
-    </div>
-  )
-}
-
 export default function App() {
   const [tab, setTab] = useState<Tab>('overview')
   const [query, setQuery] = useState('')
@@ -296,7 +251,6 @@ export default function App() {
   const scheduleNow = useMemo(() => now, [now.getTime()])
   const { label: dayLabel } = istParts(scheduleNow)
   const stats = useMemo(() => aggregateDailyStats(REPORTS, scheduleNow), [scheduleNow])
-  const next = useMemo(() => nextGlobalSend(REPORTS, scheduleNow), [scheduleNow])
   const dayProgress =
     stats.expectedToday > 0 ? Math.min(100, (stats.sentSoFar / stats.expectedToday) * 100) : 0
 
@@ -410,8 +364,6 @@ export default function App() {
               variants={fadeUp}
               transition={tweenFast}
             >
-              <OverviewStats stats={stats} reportCount={REPORTS.length} next={next} />
-
               <div className="toolbar">
                 <label className="search-wrap">
                   <span className="sr-only">Search reports</span>
